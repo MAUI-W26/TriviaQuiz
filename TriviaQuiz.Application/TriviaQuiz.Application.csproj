@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TriviaQuiz.Domain\TriviaQuiz.Domain.csproj" />
+    <ProjectReference Include="..\TriviaQuiz.Infrastructure.Storage\TriviaQuiz.Infrastructure.Storage.csproj" />
+    <ProjectReference Include="..\TriviaQuiz.Infrastructure.Trivia\TriviaQuiz.Infrastructure.Trivia.csproj" />
+  </ItemGroup>
+
 </Project>
