@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TriviaQuiz.Domain.Entities;
 
-namespace TriviaQuiz.Domain.Entities
+public sealed class AnswerOption // sealed -> prevent inheritance, as this class is not intended to be a base class
 {
-    internal class AnswerOption
-    {
-    }
+    // required -> ensures that this property must be set during object initialization. eg: var option = new AnswerOption { Text = "Option A", IsCorrect = true };
+    public required string Text { get; init; } 
+    public bool IsCorrect { get; init; }
 }

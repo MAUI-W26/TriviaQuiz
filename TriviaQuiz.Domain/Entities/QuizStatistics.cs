@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TriviaQuiz.Domain.Entities;
 
-namespace TriviaQuiz.Domain.Entities
+public sealed class QuizStatistics
 {
-    internal class QuizStatistics
-    {
-    }
+    public int GamesPlayed { get; init; }
+
+    public int BestScore { get; init; }
+
+    public int TotalCorrectAnswers { get; init; }
+
+    public int TotalQuestionsAnswered { get; init; }
+
+    public double AverageScore =>
+        TotalQuestionsAnswered == 0
+            ? 0
+            : (double)TotalCorrectAnswers / TotalQuestionsAnswered;
 }

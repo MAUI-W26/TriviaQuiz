@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TriviaQuiz.Domain.Entities;
+using TriviaQuiz.Domain.Requests;
 
-namespace TriviaQuiz.Domain.Contracts
+namespace TriviaQuiz.Domain.Contracts;
+
+public interface ITriviaProvider
 {
-    internal interface ITriviaProvider
-    {
-    }
+    Task<IReadOnlyList<QuizQuestion>> GetQuestionsAsync(
+        TriviaRequest request,
+        CancellationToken cancellationToken = default);
 }

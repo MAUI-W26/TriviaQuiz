@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TriviaQuiz.Domain.Enums;
 
-namespace TriviaQuiz.Domain.Enums
+public enum QuestionType
 {
-    internal class QuestionType
-    {
-    }
+    Boolean = 0,
+    Choice = 1,
+    ImageChoice = 2
 }

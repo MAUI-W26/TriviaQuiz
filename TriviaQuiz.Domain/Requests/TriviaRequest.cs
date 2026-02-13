@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TriviaQuiz.Domain.Enums;
 
-namespace TriviaQuiz.Domain.Requests
+namespace TriviaQuiz.Domain.Requests;
+
+public sealed class TriviaRequest
 {
-    internal class TriviaRequest
-    {
-    }
+    public int QuestionCount { get; init; }
+
+    public Difficulty Difficulty { get; init; } = Difficulty.Any;
+
+    public bool IncludeBoolean { get; init; } = true;
+
+    public bool IncludeTextChoice { get; init; } = true;
+
+    public bool IncludeImageChoice { get; init; } = true;
 }
