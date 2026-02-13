@@ -29,6 +29,7 @@ ARM64/
 *.aab
 *.ipa
 *.app
+!TriviaQuiz.App
 *.dSYM/
 *.keystore
 
