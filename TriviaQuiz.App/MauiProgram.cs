@@ -1,25 +1,36 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Maui;
+using Microsoft.Maui.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace TriviaQuiz.App
+using TriviaQuiz.Application.Services;
+using TriviaQuiz.Domain.Contracts;
+
+using TriviaQuiz.Infrastructure.Trivia.Services;
+using TriviaQuiz.Infrastructure.Storage.Services;
+using Microsoft.Extensions.DependencyInjection;
+
+
+namespace TriviaQuiz.App;
+
+public static class MauiProgram
 {
-    public static class MauiProgram
+    public static MauiApp CreateMauiApp()
     {
-        public static MauiApp CreateMauiApp()
-        {
-            var builder = MauiApp.CreateBuilder();
-            builder
-                .UseMauiApp<App>()
-                .ConfigureFonts(fonts =>
-                {
-                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+        var builder = MauiApp.CreateBuilder();
+
+        builder.Services.AddSingleton<HttpClient>();
+
+        builder.Services.AddSingleton<IQuizStorage, QuizStorageFacade>();
+
+        builder.Services.AddSingleton<IQuizQuestionService, QuizQuestionService>();
+        builder.Services.AddSingleton<ITriviaCatalogService, TriviaCatalogService>();
+
+        builder.Services.AddSingleton<IQuizService, QuizService>();
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
-            return builder.Build();
-        }
+        return builder.Build();
     }
 }

@@ -8,9 +8,7 @@ public sealed class QuizQuestion
 
     public required string QuestionText { get; init; }
 
-    public required IReadOnlyList<AnswerOption> Options { get; init; }
+    public required IReadOnlyList<string> Options { get; init; }
 
     public required int CorrectIndex { get; init; }
-
-    public string? ImageUrl { get; init; }
 }

@@ -20,4 +20,5 @@ public interface IQuizStorage
 
     Task ClearSessionAsync(
         CancellationToken cancellationToken = default);
+    Task DeleteSessionAsync(CancellationToken cancellationToken);
 }
