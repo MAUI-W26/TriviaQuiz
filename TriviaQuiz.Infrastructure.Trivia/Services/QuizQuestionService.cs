@@ -8,6 +8,12 @@ using TriviaQuiz.Infrastructure.Trivia.Providers;
 
 namespace TriviaQuiz.Infrastructure.Trivia.Services;
 
+/// <summary>
+/// Coordinates retrieval of quiz questions using one or more trivia providers.
+/// 
+/// Handles retry logic, fallback providers, and aggregation of results.
+/// This service encapsulates all provider selection and resilience logic.
+/// </summary>
 public sealed class QuizQuestionService : IQuizQuestionService
 {
     private readonly TriviaProviderFactory _factory;
@@ -24,10 +30,16 @@ public sealed class QuizQuestionService : IQuizQuestionService
         if (httpClient == null)
             throw new ArgumentNullException(nameof(httpClient));
 
+        loggerFactory ??= NullLoggerFactory.Instance;
+
         _factory = new TriviaProviderFactory(httpClient, loggerFactory);
-        _logger = logger ?? NullLogger<QuizQuestionService>.Instance;
+
+        _logger = logger ?? loggerFactory.CreateLogger<QuizQuestionService>();
     }
 
+    /// <summary>
+    /// Retrieves questions using primary and fallback providers with retry logic.
+    /// </summary>
     public async Task<IReadOnlyList<QuizQuestion>> GetQuestionsAsync(
         TriviaRequest request,
         CancellationToken cancellationToken = default)
@@ -36,37 +48,39 @@ public sealed class QuizQuestionService : IQuizQuestionService
             throw new ArgumentNullException(nameof(request));
 
         if (request.QuestionCount <= 0)
-            throw new ArgumentException("QuestionCount must be greater than zero.", nameof(request));
+            throw new ArgumentException(
+                "QuestionCount must be greater than zero.",
+                nameof(request));
 
         var result = new List<QuizQuestion>(request.QuestionCount);
 
-        // PRIMARY attempts
+        // Attempt primary provider first
         for (int attempt = 1; attempt <= PrimaryMaxAttempts; attempt++)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
             var provider = _factory.CreatePrimary();
 
-            if (await TryFetch(provider, request, result, cancellationToken, $"Primary attempt {attempt}"))
+            if (await TryFetch(
+                provider,
+                request,
+                result,
+                cancellationToken,
+                $"Primary attempt {attempt}"))
+            {
                 break;
+            }
 
             if (result.Count >= request.QuestionCount)
                 break;
         }
 
-        // FALLBACK attempts if needed
+        // Attempt fallback providers if necessary
         var remaining = request.QuestionCount - result.Count;
 
         if (remaining > 0)
         {
-            var fallbackRequest = new TriviaRequest
-            {
-                QuestionCount = remaining,
-                Difficulty = request.Difficulty,
-                CategoryKey = request.CategoryKey,
-                IncludeBoolean = false,
-                IncludeChoice = true
-            };
+            var fallbackRequest = CreateFallbackRequest(request, remaining);
 
             for (int providerIndex = 0; ; providerIndex++)
             {
@@ -94,14 +108,8 @@ public sealed class QuizQuestionService : IQuizQuestionService
                     if (remaining <= 0)
                         break;
 
-                    fallbackRequest = new TriviaRequest
-                    {
-                        QuestionCount = remaining,
-                        Difficulty = request.Difficulty,
-                        CategoryKey = request.CategoryKey,
-                        IncludeBoolean = false,
-                        IncludeChoice = true
-                    };
+                    fallbackRequest =
+                        CreateFallbackRequest(request, remaining);
                 }
 
                 if (result.Count >= request.QuestionCount)
@@ -129,18 +137,24 @@ public sealed class QuizQuestionService : IQuizQuestionService
     {
         try
         {
-            var questions = await provider.GetQuestionsAsync(request, cancellationToken);
+            var questions =
+                await provider.GetQuestionsAsync(
+                    request,
+                    cancellationToken);
 
             if (questions.Count == 0)
             {
-                _logger.LogWarning("{Label} returned 0 questions", label);
+                _logger.LogWarning(
+                    "{Label} returned no questions",
+                    label);
+
                 return false;
             }
 
             result.AddRange(questions);
 
             _logger.LogInformation(
-                "{Label} success Count={Count} Total={Total}",
+                "{Label} succeeded Count={Count} Total={Total}",
                 label,
                 questions.Count,
                 result.Count);
@@ -153,19 +167,39 @@ public sealed class QuizQuestionService : IQuizQuestionService
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "{Label} failed", label);
+            _logger.LogWarning(
+                ex,
+                "{Label} failed",
+                label);
+
             return false;
         }
     }
 
+    private static TriviaRequest CreateFallbackRequest(
+        TriviaRequest original,
+        int count)
+    {
+        return new TriviaRequest
+        {
+            QuestionCount = count,
+            Difficulty = original.Difficulty,
+            CategoryKey = original.CategoryKey,
+            IncludeBoolean = false,
+            IncludeChoice = true
+        };
+    }
+
     private static List<QuizQuestion> Shuffle(List<QuizQuestion> input)
     {
-        return input.OrderBy(_ => Guid.NewGuid()).ToList();
+        return input
+            .OrderBy(_ => Guid.NewGuid())
+            .ToList();
     }
 
     public IReadOnlyList<TriviaCategory> GetCategories()
     {
         return TriviaCategoryRegistry.All;
     }
-
 }
+ 

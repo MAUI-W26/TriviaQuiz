@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="TriviaQuiz.App.Views.GameSetupPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:TriviaQuiz.App.ViewModels"
+    Title="Game Setup">
+
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="30"
+            Spacing="20">
+
+            <Label
+                Text="Game Setup"
+                FontSize="28"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <!-- Question Count -->
+
+            <Label Text="Number of Questions" />
+
+            <Picker
+                ItemsSource="{Binding QuestionCountOptions}"
+                SelectedItem="{Binding SelectedQuestionCount}" />
+
+            <!-- Difficulty -->
+
+            <Label Text="Difficulty" />
+
+            <Picker
+                ItemsSource="{Binding DifficultyOptions}"
+                SelectedItem="{Binding SelectedDifficulty}" />
+
+            <!-- Category -->
+
+            <Label Text="Category (Optional)" />
+
+            <Picker
+                ItemsSource="{Binding CategoryOptions}"
+                ItemDisplayBinding="{Binding Name}"
+                SelectedItem="{Binding SelectedCategory}" />
+
+            <!-- Start -->
+
+            <Button
+                Text="Start Quiz"
+                Command="{Binding StartQuizCommand}" />
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>

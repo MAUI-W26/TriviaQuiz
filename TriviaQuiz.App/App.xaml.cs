@@ -1,6 +1,8 @@
-﻿namespace TriviaQuiz.App
+﻿using Microsoft.Maui.Controls;
+
+namespace TriviaQuiz.App
 {
-    public partial class App : Application
+    public partial class App : Microsoft.Maui.Controls.Application
     {
         public App()
         {

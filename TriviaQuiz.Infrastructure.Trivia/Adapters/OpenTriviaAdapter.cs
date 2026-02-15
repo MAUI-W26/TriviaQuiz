@@ -25,6 +25,8 @@ internal static class OpenTriviaAdapter
 
         var options = incorrect
             .Append(correct)
+            .Where(o => o != null)
+            .Select(o => o!)
             .OrderBy(_ => Guid.NewGuid())
             .ToList();
 

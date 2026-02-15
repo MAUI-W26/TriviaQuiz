@@ -1,0 +1,46 @@
+<ContentPage
+    x:Class="TriviaQuiz.App.Views.StatisticsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Statistics">
+
+    <VerticalStackLayout Padding="24" Spacing="16">
+
+        <Label
+            Text="Games Played"
+            FontSize="18"/>
+
+        <Label
+            x:Name="GamesPlayedLabel"
+            FontSize="28"
+            FontAttributes="Bold"/>
+
+        <Label
+            Text="Best Score"
+            FontSize="18"/>
+
+        <Label
+            x:Name="BestScoreLabel"
+            FontSize="28"
+            FontAttributes="Bold"/>
+
+        <Label
+            Text="Accuracy"
+            FontSize="18"/>
+
+        <Label
+            x:Name="AccuracyLabel"
+            FontSize="28"
+            FontAttributes="Bold"/>
+
+        <Button
+            Text="Reset Statistics"
+            Clicked="OnResetClicked"/>
+
+        <Button
+            Text="Back"
+            Clicked="OnBackClicked"/>
+
+    </VerticalStackLayout>
+
+</ContentPage>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    x:Class="TriviaQuiz.App.Views.ResultPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Result">
+
+    <VerticalStackLayout
+        Padding="30"
+        Spacing="20"
+        VerticalOptions="Center">
+
+        <Label
+            Text="Quiz Completed"
+            FontSize="32"
+            FontAttributes="Bold"
+            HorizontalOptions="Center" />
+
+        <Label
+            Text="{Binding ScoreText}"
+            FontSize="24"
+            HorizontalOptions="Center" />
+
+        <Label
+            Text="{Binding PercentageText}"
+            FontSize="20"
+            HorizontalOptions="Center" />
+
+        <Button
+            Text="Return to Main Menu"
+            Command="{Binding ReturnCommand}" />
+
+        <Button
+            Text="View Statistics"
+            Command="{Binding StatisticsCommand}" />
+
+    </VerticalStackLayout>
+
+</ContentPage>

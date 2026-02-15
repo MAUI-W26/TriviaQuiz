@@ -54,27 +54,68 @@ public sealed class QuizService : IQuizService
 
     /// <inheritdoc/>
     public async Task<bool> HasActiveSessionAsync(
-        CancellationToken cancellationToken = default)
+    CancellationToken cancellationToken = default)
     {
-        if (_session != null && !_session.IsCompleted)
+        if (_session != null)
+        {
+            if (_session.IsCompleted)
+            {
+                await _storage.DeleteSessionAsync(cancellationToken);
+                _session = null;
+                return false;
+            }
+
             return true;
+        }
 
         var stored = await _storage.LoadSessionAsync(cancellationToken);
 
-        return stored != null && !stored.IsCompleted;
+        if (stored == null)
+            return false;
+
+        if (stored.IsCompleted) // Clean up completed session if found in storage (Edge case -> user closes the app at result page)
+        {
+            await _storage.DeleteSessionAsync(cancellationToken);
+            return false;
+        }
+
+        _session = stored;
+        return true;
     }
+
 
     /// <inheritdoc/>
     public async Task<QuizSession?> ResumeSessionAsync(
-        CancellationToken cancellationToken = default)
+    CancellationToken cancellationToken = default)
     {
-        if (_session != null && !_session.IsCompleted)
+        if (_session != null)
+        {
+            if (_session.IsCompleted) // Clean up in-memory completed session if it exists
+                                      // (Edge case -> user finishes quiz but doesn't close the app and tries to resume woithout clicking return button)
+            {
+                await _storage.DeleteSessionAsync(cancellationToken);
+                _session = null;
+                return null;
+            }
+
             return _session;
+        }
 
-        _session = await _storage.LoadSessionAsync(cancellationToken);
+        var stored = await _storage.LoadSessionAsync(cancellationToken);
 
+        if (stored == null)
+            return null;
+
+        if (stored.IsCompleted)
+        {
+            await _storage.DeleteSessionAsync(cancellationToken);
+            return null;
+        }
+
+        _session = stored;
         return _session;
     }
+
 
     /// <inheritdoc/>
     public async Task<QuizSession> StartNewSessionAsync(
