@@ -8,6 +8,22 @@ using TriviaQuiz.Infrastructure.Trivia.Services;
 
 namespace TriviaQuiz.Application.Services;
 
+/// <summary>
+/// Default implementation of the quiz application service.
+/// 
+/// This service acts as the orchestration layer between:
+/// - Trivia question providers (external infrastructure)
+/// - Persistent storage (session and statistics)
+/// - Application/UI layer
+/// 
+/// Responsibilities:
+/// - Manage quiz session lifecycle
+/// - Coordinate persistence through storage facade
+/// - Enforce game rules and progression
+/// - Maintain and update cumulative statistics
+/// 
+/// This class contains no UI or platform-specific logic.
+/// </summary>
 public sealed class QuizService : IQuizService
 {
     private readonly IQuizQuestionService _questionService;
@@ -30,11 +46,13 @@ public sealed class QuizService : IQuizService
         _logger = logger ?? NullLogger<QuizService>.Instance;
     }
 
+    /// <inheritdoc/>
     public IReadOnlyList<TriviaCategory> GetCategories()
     {
         return _questionService.GetCategories();
     }
 
+    /// <inheritdoc/>
     public async Task<bool> HasActiveSessionAsync(
         CancellationToken cancellationToken = default)
     {
@@ -46,6 +64,7 @@ public sealed class QuizService : IQuizService
         return stored != null && !stored.IsCompleted;
     }
 
+    /// <inheritdoc/>
     public async Task<QuizSession?> ResumeSessionAsync(
         CancellationToken cancellationToken = default)
     {
@@ -57,6 +76,7 @@ public sealed class QuizService : IQuizService
         return _session;
     }
 
+    /// <inheritdoc/>
     public async Task<QuizSession> StartNewSessionAsync(
         int questionCount,
         Difficulty difficulty,
@@ -64,10 +84,10 @@ public sealed class QuizService : IQuizService
         CancellationToken cancellationToken = default)
     {
         if (questionCount <= 0)
-            throw new ArgumentException("Question count must be > 0.");
+            throw new ArgumentException("Question count must be greater than zero.");
 
         _logger.LogInformation(
-            "Starting new quiz session Count={Count} Difficulty={Difficulty} Category={Category}",
+            "Starting quiz session: Count={Count}, Difficulty={Difficulty}, Category={Category}",
             questionCount,
             difficulty,
             categoryKey);
@@ -91,9 +111,9 @@ public sealed class QuizService : IQuizService
             CurrentQuestionIndex = 0,
             CorrectAnswers = 0,
             IsCompleted = false,
-            SelectedAnswers = Enumerable.Repeat<int?>(
-                null,
-                questions.Count).ToList()
+            SelectedAnswers = Enumerable
+                .Repeat<int?>(null, questions.Count)
+                .ToList()
         };
 
         await _storage.SaveSessionAsync(session, cancellationToken);
@@ -103,6 +123,7 @@ public sealed class QuizService : IQuizService
         return session;
     }
 
+    /// <inheritdoc/>
     public QuizQuestion GetCurrentQuestion()
     {
         EnsureSession();
@@ -113,6 +134,7 @@ public sealed class QuizService : IQuizService
         return _session.Questions[_session.CurrentQuestionIndex];
     }
 
+    /// <inheritdoc/>
     public async Task<bool> SelectAnswerAsync(
         int selectedIndex,
         CancellationToken cancellationToken = default)
@@ -128,49 +150,45 @@ public sealed class QuizService : IQuizService
         if (_session.SelectedAnswers[questionIndex] != null)
             throw new InvalidOperationException("Answer already selected.");
 
-        var selectedAnswers = _session.SelectedAnswers.ToList();
-        selectedAnswers[questionIndex] = selectedIndex;
+        var updatedAnswers = _session.SelectedAnswers.ToList();
+        updatedAnswers[questionIndex] = selectedIndex;
 
-        var correct = selectedIndex == question.CorrectIndex;
+        var isCorrect = selectedIndex == question.CorrectIndex;
 
-        var correctCount = _session.CorrectAnswers;
-
-        if (correct)
-            correctCount++;
+        var updatedCorrectCount = _session.CorrectAnswers;
+        if (isCorrect)
+            updatedCorrectCount++;
 
         _session = new QuizSession
         {
             Id = _session.Id,
             CreatedAtUtc = _session.CreatedAtUtc,
             Questions = _session.Questions,
-            CurrentQuestionIndex = _session.CurrentQuestionIndex,
-            CorrectAnswers = correctCount,
-            SelectedAnswers = selectedAnswers,
-            IsCompleted = _session.IsCompleted
+            CurrentQuestionIndex = questionIndex,
+            CorrectAnswers = updatedCorrectCount,
+            SelectedAnswers = updatedAnswers,
+            IsCompleted = false
         };
 
         await _storage.SaveSessionAsync(_session, cancellationToken);
 
-        return correct;
+        return isCorrect;
     }
 
+    /// <inheritdoc/>
     public bool CanAdvance()
     {
         EnsureSession();
-
         return !_session!.IsCompleted;
     }
 
+    /// <inheritdoc/>
     public async Task AdvanceAsync(
         CancellationToken cancellationToken = default)
     {
         EnsureSession();
 
-        if (_session!.IsCompleted)
-            throw new InvalidOperationException("Session already completed.");
-
-        var nextIndex = _session.CurrentQuestionIndex + 1;
-
+        var nextIndex = _session!.CurrentQuestionIndex + 1;
         var completed = nextIndex >= _session.Questions.Count;
 
         _session = new QuizSession
@@ -187,8 +205,12 @@ public sealed class QuizService : IQuizService
         };
 
         await _storage.SaveSessionAsync(_session, cancellationToken);
+
+        if (completed)
+            await UpdateStatisticsAsync(_session, cancellationToken);
     }
 
+    /// <inheritdoc/>
     public bool IsCompleted
     {
         get
@@ -198,27 +220,77 @@ public sealed class QuizService : IQuizService
         }
     }
 
+    /// <inheritdoc/>
     public QuizSession GetSession()
     {
         EnsureSession();
         return _session!;
     }
 
+    /// <inheritdoc/>
     public async Task AbandonSessionAsync(
         CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Abandoning session");
+        _logger.LogInformation("Abandoning quiz session.");
 
         _session = null;
 
         await _storage.DeleteSessionAsync(cancellationToken);
     }
 
+    /// <inheritdoc/>
+    public async Task<QuizStatistics> GetStatisticsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var stats = await _storage.LoadStatisticsAsync(cancellationToken);
+
+        return stats ?? new QuizStatistics();
+    }
+
+    /// <inheritdoc/>
+    public async Task ResetStatisticsAsync(
+        CancellationToken cancellationToken = default)
+    {
+        await _storage.SaveStatisticsAsync(
+            new QuizStatistics(),
+            cancellationToken);
+    }
+
+    /// <summary>
+    /// Updates cumulative statistics when a session is completed.
+    /// </summary>
+    private async Task UpdateStatisticsAsync(
+        QuizSession session,
+        CancellationToken cancellationToken)
+    {
+        var stats =
+            await _storage.LoadStatisticsAsync(cancellationToken)
+            ?? new QuizStatistics();
+
+        var answeredCount =
+            session.SelectedAnswers.Count(a => a != null);
+
+        var updatedStats = new QuizStatistics
+        {
+            GamesPlayed = stats.GamesPlayed + 1,
+            BestScore = Math.Max(stats.BestScore, session.CorrectAnswers),
+            TotalCorrectAnswers =
+                stats.TotalCorrectAnswers + session.CorrectAnswers,
+            TotalQuestionsAnswered =
+                stats.TotalQuestionsAnswered + answeredCount
+        };
+
+        await _storage.SaveStatisticsAsync(
+            updatedStats,
+            cancellationToken);
+    }
+
+    /// <summary>
+    /// Ensures an active session exists before performing session operations.
+    /// </summary>
     private void EnsureSession()
     {
         if (_session == null)
             throw new InvalidOperationException("No active session.");
     }
-
-
 }

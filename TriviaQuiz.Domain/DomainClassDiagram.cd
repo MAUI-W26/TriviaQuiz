@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TriviaQuiz.Domain.Entities.QuizQuestion">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAACAAAAAAAAQAAAABAAAA=</HashCode>
+      <FileName>Entities\QuizQuestion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TriviaQuiz.Domain.Entities.QuizSession">
+    <Position X="2.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAgAAAAAQAAAAAAAAAAAABAEAAAIABAAAAA=</HashCode>
+      <FileName>Entities\QuizSession.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TriviaQuiz.Domain.Entities.QuizStatistics">
+    <Position X="0.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAIIEAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Entities\QuizStatistics.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TriviaQuiz.Domain.Entities.TriviaCategory">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\TriviaCategory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TriviaQuiz.Domain.Entities.TriviaCategoryRegistry">
+    <Position X="4" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>SAAAAAGAAAgAAIAAAAAAAQAAAAAAAAEAgIACQAAEAAA=</HashCode>
+      <FileName>Entities\TriviaCategoryRegistry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TriviaQuiz.Domain.Requests.TriviaRequest">
+    <Position X="0.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAQAAAgAAIAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Requests\TriviaRequest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="TriviaQuiz.Domain.Contracts.IQuizQuestionService">
+    <Position X="6.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAACAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Contracts\IQuizQuestionService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TriviaQuiz.Domain.Contracts.IQuizStorage">
+    <Position X="6.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAQCAEAAAAQAAAgAA=</HashCode>
+      <FileName>Contracts\IQuizStorage.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="TriviaQuiz.Domain.Enums.Difficulty">
+    <Position X="6.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkAAA=</HashCode>
+      <FileName>Enums\Difficulty.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TriviaQuiz.Domain.Enums.QuestionType">
+    <Position X="6.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums\QuestionType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

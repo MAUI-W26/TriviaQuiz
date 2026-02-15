@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="TriviaQuiz.Infrastructure.Trivia.DTOs.OpenTriviaDbResponseDto">
+    <Position X="8.5" Y="2.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTOs\OpenTriviaDbResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TriviaQuiz.Infrastructure.Trivia.DTOs.OpenTriviaDbQuestionDto">
+    <Position X="8.75" Y="6.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAQAAAAAAAAAAAAAAAABEAQAAAAAACAA=</HashCode>
+      <FileName>DTOs\OpenTriviaDbResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TriviaQuiz.Infrastructure.Trivia.DTOs.TriviaApiQuestionDto">
+    <Position X="9" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAABAAAAAQAAAAAAAAAAAAAAAABEAQAAAAAACAA=</HashCode>
+      <FileName>DTOs\TriviaApiResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TriviaQuiz.Infrastructure.Trivia.DTOs.TriviaApiQuestionTextDto">
+    <Position X="8.75" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>DTOs\TriviaApiResponse.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TriviaQuiz.Infrastructure.Trivia.Providers.OpenTriviaDbProvider" Collapsed="true">
+    <Position X="0.5" Y="4" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAkAAgAgAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Providers\OpenTriviaDbProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TriviaQuiz.Infrastructure.Trivia.Providers.TriviaApiProvider" Collapsed="true">
+    <Position X="2.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAkAAgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Providers\TriviaApiProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TriviaQuiz.Infrastructure.Trivia.Providers.TriviaProviderBase" Collapsed="true">
+    <Position X="1.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEIAgAgAAAAAACBAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Providers\TriviaProviderBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TriviaQuiz.Infrastructure.Trivia.Factories.TriviaProviderFactory">
+    <Position X="1.5" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACAAgAAACAAAAIAAAAAAA=</HashCode>
+      <FileName>Factories\TriviaProviderFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TriviaQuiz.Infrastructure.Trivia.Services.QuizQuestionService" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAABAACAQIQAAAAAAAAACAAAAEAA=</HashCode>
+      <FileName>Services\QuizQuestionService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TriviaQuiz.Infrastructure.Trivia.Adapters.OpenTriviaAdapter">
+    <Position X="4.25" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Adapters\OpenTriviaAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TriviaQuiz.Infrastructure.Trivia.Adapters.TriviaApiAdapter">
+    <Position X="4.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Adapters\TriviaApiAdapter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="TriviaQuiz.Infrastructure.Trivia.Providers.ITriviaProvider">
+    <Position X="1.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Providers\ITriviaProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
